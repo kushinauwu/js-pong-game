@@ -12,6 +12,22 @@ class Rectangle {
         this.pos = new Vec;
         this.size = new Vec(width, height);
     }
+
+    get left() {
+        return this.pos.x - this.size.x / 2;
+    }
+
+    get right() {
+        return this.pos.x + this.size.x / 2
+    }
+
+    get top() {
+        return this.pos.y - this.size.y / 2;
+    }
+
+    get bottom() {
+        return this.pos.y + this.size.y / 2
+    }
 }
 
 // Ball inherits from rectangle
@@ -49,6 +65,14 @@ function callback(millis) {
 function updatePosition(dt) {
     ball.pos.x += ball.velocity.x * dt;
     ball.pos.y += ball.velocity.y * dt;
+
+    if (ball.pos.x < 0 || ball.pos.x > canvas.width) {
+        ball.velocity.x = -ball.velocity.x
+    }
+
+    if (ball.pos.y < 0 || ball.pos.y > canvas.height) {
+        ball.velocity.y = -ball.velocity.y
+    }
 
     context.fillStyle = 'black';
     context.fillRect(0, 0, canvas.width, canvas.height);
