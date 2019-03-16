@@ -4,6 +4,16 @@ class Vec {
         this.x = x;
         this.y = y;
     }
+
+    get length() {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    }
+
+    set length(value) {
+        const fact = value / this.length;
+        this.x *= fact;
+        this.y *= fact;
+    }
 }
 
 // create generalized data structure for recatangles
@@ -81,7 +91,10 @@ class Pong {
 
     collide(player, ball) {
         if (player.left < ball.right && player.right > ball.left && player.top < ball.bottom && player.bottom > ball.top) {
+            const length = ball.velocity.length;
             ball.velocity.x = -ball.velocity.x;
+            ball.velocity.y += 300 * (Math.random() - 0.5)
+            ball.velocity.length = length * 1.05;
         }
     }
 
@@ -106,8 +119,9 @@ class Pong {
 
     start() {
         if (this.ball.velocity.x === 0 && this.ball.velocity.y === 0) {
-            this.ball.velocity.x = 300;
-            this.ball.velocity.y = 300;
+            this.ball.velocity.x = 300 * (Math.random() > 0.5 ? 1 : -1);
+            this.ball.velocity.y = 300 * (Math.random() * 2 - 1);
+            this.ball.velocity.length = 250;
         }
     }
 
@@ -145,4 +159,4 @@ canvas.addEventListener('mousemove', event => {
 
 canvas.addEventListener('click', event => {
     pong.start();
-})
+});
