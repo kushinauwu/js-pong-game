@@ -52,10 +52,6 @@ class Pong {
 
         this.ball = new Ball;
         console.log(this.ball);
-        this.ball.pos.x = 100;
-        this.ball.pos.y = 100;
-        this.ball.velocity.x = 100;
-        this.ball.velocity.y = 100;
 
         this.players = [
             new Player, new Player,
@@ -79,6 +75,14 @@ class Pong {
             requestAnimationFrame(callback);
         };
         callback();
+
+        this.reset();
+    }
+
+    collide(player, ball) {
+        if (player.left < ball.right && player.right > ball.left && player.top < ball.bottom && player.bottom > ball.top) {
+            ball.velocity.x = -ball.velocity.x;
+        }
     }
 
     draw() {
@@ -93,12 +97,23 @@ class Pong {
         this._context.fillRect(rectangle.left, rectangle.top, rectangle.size.x, rectangle.size.y);
     }
 
+    reset() {
+        this.ball.pos.x = 100;
+        this.ball.pos.y = 100;
+        this.ball.velocity.x = 200;
+        this.ball.velocity.y = 200;
+    }
+
     updatePosition(dt) {
         this.ball.pos.x += this.ball.velocity.x * dt;
         this.ball.pos.y += this.ball.velocity.y * dt;
 
         if (this.ball.left < 0 || this.ball.right > this._canvas.width) {
-            this.ball.velocity.x = -this.ball.velocity.x
+            const playerID = this.ball.velocity.x < 0 | 0;
+            this.players[playerID].score++;
+            console.log(playerID);
+            this.reset();
+            //this.ball.velocity.x = -this.ball.velocity.x
         }
 
         if (this.ball.top < 0 || this.ball.bottom > this._canvas.height) {
@@ -107,6 +122,8 @@ class Pong {
 
         this.players[1].pos.y = this.ball.pos.y;
 
+        this.players.forEach(player => this.collide(player, this.ball));
+
         this.draw();
     }
 }
@@ -114,3 +131,7 @@ class Pong {
 // create pong canvas and elements
 const canvas = document.getElementById('pong');
 const pong = new Pong(canvas);
+
+canvas.addEventListener('mousemove', event => {
+    pong.players[0].pos.y = event.offsetY;
+})
