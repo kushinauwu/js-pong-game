@@ -38,6 +38,13 @@ class Ball extends Rectangle {
     }
 }
 
+class Player extends Rectangle {
+    constructor() {
+        super(20, 100);
+        this.score = 0;
+    }
+}
+
 class Pong {
     constructor(canvas) {
         this._canvas = canvas;
@@ -50,6 +57,16 @@ class Pong {
         this.ball.velocity.x = 100;
         this.ball.velocity.y = 100;
 
+        this.players = [
+            new Player, new Player,
+        ];
+
+        this.players[0].pos.x = 30;
+        this.players[1].pos.x = this._canvas.width - 30;
+        this.players.forEach(player => {
+            player.pos.y = this._canvas.height / 2;
+        })
+
         let lastTime;
 
         // use requestAnimationFrame to call callback to update the ball's position using arrow function
@@ -60,8 +77,20 @@ class Pong {
             }
             lastTime = millis;
             requestAnimationFrame(callback);
-        }
+        };
         callback();
+    }
+
+    draw() {
+        this._context.fillStyle = 'black';
+        this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
+        this.drawRectangle(this.ball);
+        this.players.forEach(player => this.drawRectangle(player));
+    }
+
+    drawRectangle(rectangle) {
+        this._context.fillStyle = 'white';
+        this._context.fillRect(rectangle.left, rectangle.top, rectangle.size.x, rectangle.size.y);
     }
 
     updatePosition(dt) {
@@ -76,11 +105,9 @@ class Pong {
             this.ball.velocity.y = -this.ball.velocity.y
         }
 
-        this._context.fillStyle = 'black';
-        this._context.fillRect(0, 0, this._canvas.width, this._canvas.height);
+        this.players[1].pos.y = this.ball.pos.y;
 
-        this._context.fillStyle = 'white';
-        this._context.fillRect(this.ball.pos.x, this.ball.pos.y, this.ball.size.x, this.ball.size.y);
+        this.draw();
     }
 }
 
