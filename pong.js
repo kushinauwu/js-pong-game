@@ -149,7 +149,7 @@ class Pong {
             const chars = player.score.toString().split('');
             const offset = align *
                 (index + 1) -
-                (CHAR_WIDTH * chars.length / 2) *
+                (CHAR_WIDTH * chars.length / 2) +
                 this.CHAR_PIXELS / 2;
             chars.forEach((char, pos) => {
                 this._context.drawImage(this.CHARS[char | 0],
@@ -169,7 +169,7 @@ class Pong {
         if (this.ball.velocity.x === 0 && this.ball.velocity.y === 0) {
             this.ball.velocity.x = 300 * (Math.random() > 0.5 ? 1 : -1);
             this.ball.velocity.y = 300 * (Math.random() * 2 - 1);
-            this.ball.velocity.length = 250;
+            this.ball.velocity.length = 200;
         }
     }
 
